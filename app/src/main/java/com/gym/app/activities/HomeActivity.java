@@ -493,8 +493,8 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback, Go
         String endTime = df.format(c.getTime());
 
         BookParking toBeAddedBookPArking = new BookParking();
-        toBeAddedBookPArking.setEnd_datetime(startTime.concat(" +0300"));
-        toBeAddedBookPArking.setStart_datetime(endTime.concat(" +0300"));
+        toBeAddedBookPArking.setStart_datetime(startTime.concat(" +0300"));
+        toBeAddedBookPArking.setEnd_datetime(endTime.concat(" +0300"));
 
 
         mApiService.bookParking(toBeAddedBookPArking, this.idOfCurrentSelectedParkingSpot)
@@ -509,6 +509,7 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback, Go
                     @Override
                     public void onComplete() {
                         Toast.makeText(HomeActivity.this, "OK", Toast.LENGTH_SHORT).show();
+                        loadParkingPlaces();
 
                     }
 
