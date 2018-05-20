@@ -1,5 +1,6 @@
 package com.gym.app.activities;
 
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -166,8 +167,9 @@ public class AddParkingPlaceActivity extends AppCompatActivity {
 
                                            @Override
                                            public void onComplete() {
-
-                                           }
+                                                setResult(2);
+                                                finish();
+                                            ;}
                                        }
 
                                        );

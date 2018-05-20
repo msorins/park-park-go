@@ -469,9 +469,9 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback, Go
     }
 
     public void bookParking(View view) {
-        BookParking toBeAddedBookPArking = new BookParking();
-        toBeAddedBookPArking.setEnd_datetime();
-        toBeAddedBookPArking.setStart_datetime();
-        mApiService.bookParking(toBeAddedBookPArking).sub
+//        BookParking toBeAddedBookPArking = new BookParking();
+//        toBeAddedBookPArking.setEnd_datetime();
+//        toBeAddedBookPArking.setStart_datetime();
+//        mApiService.bookParking(toBeAddedBookPArking).sub
     }
 }
