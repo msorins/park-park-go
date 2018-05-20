@@ -10,20 +10,21 @@ import android.widget.TextView;
 
 import com.gym.app.R;
 import com.gym.app.data.model.ParkingHistory;
-import com.gym.app.data.model.ParkingHistoryBody;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
 import butterknife.BindView;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 public class PHAdapter extends RecyclerView.Adapter<PHAdapter.PHViewHolder> {
 
     private ArrayList<ParkingHistory> mPHs;
     private AdapterView.OnItemClickListener listener;
 
+    DateFormat timeFormatter =
+            new SimpleDateFormat("yyyy MMM dd HH:mm:ss");
     @BindView(R.id.ph_list_item_name)
     EditText mName;
 
@@ -62,7 +63,7 @@ public class PHAdapter extends RecyclerView.Adapter<PHAdapter.PHViewHolder> {
 
     }
 
-    public void setmPHs(ArrayList<ParkingHistory> ph){
+    public void setmPHs(ArrayList<ParkingHistory> ph) {
         mPHs = ph;
     }
 
@@ -81,9 +82,9 @@ public class PHAdapter extends RecyclerView.Adapter<PHAdapter.PHViewHolder> {
     public void onBindViewHolder(PHViewHolder holder, int position) {
         holder.spot.setText(String.format(Locale.getDefault(), "%s", mPHs.get(position).getParkSpot().mName));
         holder.address.setText(String.format(Locale.getDefault(), "%s", mPHs.get(position).getParkSpot().mAddress));
-        holder.price.setText(String.format(Locale.getDefault(), "%s", mPHs.get(position).getParkSpot().mPricePerHour));
-        holder.start_date.setText(String.format(Locale.getDefault(), "%s", mPHs.get(position).getStart_date()));
-        holder.end_date.setText(String.format(Locale.getDefault(), "%s", mPHs.get(position).getEnd_date()));
+        holder.price.setText(String.format("Price: %s", mPHs.get(position).getParkSpot().mPricePerHour));
+        holder.start_date.setText("From : " + String.format(Locale.getDefault(), "%s", timeFormatter.format(mPHs.get(position).getStart_date())));
+        holder.end_date.setText("To: " + String.format(Locale.getDefault(), "%s", timeFormatter.format(mPHs.get(position).getEnd_date())));
     }
 
     @Override

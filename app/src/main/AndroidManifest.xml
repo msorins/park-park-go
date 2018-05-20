@@ -129,6 +129,7 @@
 
         <activity
             android:name=".activities.ParkingHistoryActivity"
+            android:parentActivityName=".activities.HomeActivity"
             android:label="@string/title_activity_parking_history"
             android:theme="@style/AppThemeNoActionbar"></activity>
     </application>
