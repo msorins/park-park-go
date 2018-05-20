@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.gym.app.R;
 import com.gym.app.activities.MyCarsActivity;
+import com.gym.app.activities.ParkingHistoryActivity;
 import com.gym.app.di.InjectionHelper;
 import com.gym.app.server.ApiService;
 
@@ -70,6 +71,11 @@ public class ManagerDrawerFragment extends BaseFragment {
                 }, throwable -> Timber.e(throwable));
     }
 
+    @OnClick(R.id.parking_history)
+    void goToParkHistory() {
+        Intent goToPArkingHistoy = new Intent(getContext(), ParkingHistoryActivity.class);
+        startActivity(goToPArkingHistoy);
+    }
 
     @OnClick(R.id.drawer_menu_your_cars)
     void clickedYourCars(){

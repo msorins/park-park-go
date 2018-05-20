@@ -6,11 +6,11 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.gym.app.R;
 import com.gym.app.activities.MyCarsActivity;
+import com.gym.app.activities.ParkingHistoryActivity;
 import com.gym.app.di.InjectionHelper;
 import com.gym.app.server.ApiService;
 
@@ -72,10 +72,17 @@ public class DrawerFragment extends BaseFragment {
 
 
     @OnClick(R.id.drawer_menu_your_cars)
-    void clickedYourCars(){
+    void clickedYourCars() {
         Intent goToMyCars = new Intent(getContext(), MyCarsActivity.class);
         startActivity(goToMyCars);
     }
+
+    @OnClick(R.id.parking_history)
+    void goToParkHistory() {
+        Intent goToPArkingHistoy = new Intent(getContext(), ParkingHistoryActivity.class);
+        startActivity(goToPArkingHistoy);
+    }
+
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_drawer;

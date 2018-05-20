@@ -473,9 +473,4 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback, Go
     public void bookParking(View view) {
        
     }
-
-    public void goToParkingHistory(View view) {
-        Intent goToPArkingHistoy = new Intent(this, ParkingHistoryActivity.class);
-        startActivity(goToPArkingHistoy);
-    }
 }

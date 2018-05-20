@@ -120,10 +120,10 @@
         android:paddingBottom="20dp"
         android:paddingLeft="24dp"
         android:paddingTop="20dp"
+        android:id="@+id/parking_history"
         android:text="Parking history"
         android:textColor="@color/white"
         android:textSize="18sp"
-        android:onClick="goToParkingHistory"
         />
 
     <TextView
