@@ -394,14 +394,14 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback, Go
 
         int startingHour = this.timeFilterDialogFragment.mTimePicker1.getCurrentHour();
         int startingDay = this.timeFilterDialogFragment.mDatePicker1.getDayOfMonth();
-        int startingMonth = this.timeFilterDialogFragment.mDatePicker1.getMonth();
+        int startingMonth = this.timeFilterDialogFragment.mDatePicker1.getMonth() + 1;
         int startingYear = this.timeFilterDialogFragment.mDatePicker1.getYear();
 
 
 
         int endingHour = this.timeFilterDialogFragment.mTimePicker2.getCurrentHour();
         int endingDay = this.timeFilterDialogFragment.mDatePicker2.getDayOfMonth();
-        int endingMonth = this.timeFilterDialogFragment.mDatePicker2.getMonth();
+        int endingMonth = this.timeFilterDialogFragment.mDatePicker2.getMonth() + 1;
         int endingYear =this.timeFilterDialogFragment. mDatePicker2.getYear();
 
 
@@ -417,8 +417,7 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback, Go
         end.append(endingMonth); end.append("-");
         end.append(endingDay); end.append(" ");
         end.append(endingHour); end.append(":00:00 +0300");
-
-
+        
 
         mApiService.getParkingPlaces(
                 Prefs.Latitude.getDouble(0),
