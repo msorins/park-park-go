@@ -100,6 +100,9 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback, Go
     @BindView(R.id.card_image)
     ImageView mCardImage;
 
+    @BindView(R.id.timeFilterText)
+    TextView timeFilterText;
+
 //    @BindView(R.id.manageParkingSpacesText)
 //    TextView manageParkingSpaceText;
 
@@ -394,6 +397,7 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback, Go
 
     public void clickedFilter(View view) {
         this.timeFilterDialogFragment.show(getSupportFragmentManager(), "tag");
+        this.timeFilterText.setText("Filtered");
     }
 
     public void timeDialogDone(View view) {
