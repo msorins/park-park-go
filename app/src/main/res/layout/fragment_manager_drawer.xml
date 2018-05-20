@@ -122,6 +122,7 @@
         android:paddingLeft="24dp"
         android:paddingTop="20dp"
         android:text="Parking history"
+        android:onClick="goToParkingHistory"
         android:textColor="@color/white"
         android:textSize="18sp"/>
 
