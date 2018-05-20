@@ -260,6 +260,7 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback, Go
         mLocationMarker = mMap.addMarker(locationMarkerOptions);
         loadParkingPlaces();
         mMap.setOnMarkerClickListener(this);
+        mMap.setOnMapLongClickListener(this);
     }
 
     @Override
@@ -471,7 +472,11 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback, Go
     }
 
     public void bookParking(View view) {
-       
+//        BookParking toBeAddedBookPArking = new BookParking();
+//        toBeAddedBookPArking.setEnd_datetime();
+//        toBeAddedBookPArking.setStart_datetime();
+//        mApiService.bookParking(toBeAddedBookPArking).sub
+
     }
 
     public void goToParkingHistory(View view) {
