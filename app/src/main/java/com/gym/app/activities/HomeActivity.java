@@ -44,6 +44,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.gym.app.R;
 import com.gym.app.data.Prefs;
 import com.gym.app.data.model.BookParking;
+import com.gym.app.data.model.Car;
 import com.gym.app.data.model.ParkPlace;
 import com.gym.app.data.model.ParkingHistory;
 import com.gym.app.di.InjectionHelper;
@@ -51,7 +52,12 @@ import com.gym.app.fragments.DrawerFragment;
 import com.gym.app.server.ApiService;
 import com.patloew.rxlocation.RxLocation;
 
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -60,6 +66,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.CompletableObserver;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -116,7 +123,7 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback, Go
     private TimeFilterDialogFragment timeFilterDialogFragment;
 
     private Boolean isShowingOwnParkingPlaces = false;
-
+    private int idOfCurrentSelectedParkingSpot = -1;
     ParkPlace mLastParkPlace;
 
     @Override
@@ -130,7 +137,7 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback, Go
         mSupportMapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.home_map);
         mSupportMapFragment.getMapAsync(this);
-        timeFilterDialogFragment=new TimeFilterDialogFragment();
+        timeFilterDialogFragment = new TimeFilterDialogFragment();
 //        Intent history = new Intent(this, ParkingHistory.class);
 //        startActivity(history);
 
@@ -271,7 +278,7 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback, Go
     private void loadParkingPlaces() {
         mApiService.getParkingPlaces(
                 Prefs.Latitude.getDouble(0),
-                Prefs.Longitude.getDouble(0 ),
+                Prefs.Longitude.getDouble(0),
                 1000.0,
                 null,
                 null
@@ -290,7 +297,7 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback, Go
         mParkPlaces = parkPlaces;
         for (ParkPlace parkPlace : parkPlaces) {
             MarkerOptions options = new MarkerOptions()
-                    .icon(BitmapDescriptorFactory.fromResource( R.drawable.ic_park_spot_green ))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_park_spot_green))
                     .position(new LatLng(parkPlace.mLatitude, parkPlace.mLongitude));
             Marker marker = mMap.addMarker(options);
             marker.setTag(parkPlace);
@@ -380,6 +387,7 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback, Go
         Glide.with(this).load(mLastParkPlace.mUser.mAvatar).into(mCardImage);
         mCardAdress.setText(mLastParkPlace.mAddress);
         mCardTitle.setText(mLastParkPlace.mUser.mFirstName + " " + mLastParkPlace.mUser.mLastName + " spot #" + mLastParkPlace.mId);
+        this.idOfCurrentSelectedParkingSpot = mLastParkPlace.mId;
         showCard(true);
         return true;
     }
@@ -398,26 +406,33 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback, Go
         int startingYear = this.timeFilterDialogFragment.mDatePicker1.getYear();
 
 
-
         int endingHour = this.timeFilterDialogFragment.mTimePicker2.getCurrentHour();
         int endingDay = this.timeFilterDialogFragment.mDatePicker2.getDayOfMonth();
         int endingMonth = this.timeFilterDialogFragment.mDatePicker2.getMonth() + 1;
-        int endingYear =this.timeFilterDialogFragment. mDatePicker2.getYear();
+        int endingYear = this.timeFilterDialogFragment.mDatePicker2.getYear();
 
 
         // Goal: 2018-05-19 11:11:06 +0300
         StringBuilder start = new StringBuilder();
-        start.append(startingYear); start.append("-");
-        start.append(startingMonth); start.append("-");
-        start.append(startingDay); start.append(" ");
-        start.append(startingHour); start.append(":00:00 +0300");
+        start.append(startingYear);
+        start.append("-");
+        start.append(startingMonth);
+        start.append("-");
+        start.append(startingDay);
+        start.append(" ");
+        start.append(startingHour);
+        start.append(":00:00 +0300");
 
         StringBuilder end = new StringBuilder();
-        end.append(endingYear); end.append("-");
-        end.append(endingMonth); end.append("-");
-        end.append(endingDay); end.append(" ");
-        end.append(endingHour); end.append(":00:00 +0300");
-        
+        end.append(endingYear);
+        end.append("-");
+        end.append(endingMonth);
+        end.append("-");
+        end.append(endingDay);
+        end.append(" ");
+        end.append(endingHour);
+        end.append(":00:00 +0300");
+
 
         mApiService.getParkingPlaces(
                 Prefs.Latitude.getDouble(0),
@@ -449,7 +464,7 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback, Go
 
     @Override
     public void onMapLongClick(LatLng latLng) {
-        if(isShowingOwnParkingPlaces) {
+        if (isShowingOwnParkingPlaces) {
             Intent goToAddParkingPlaces = new Intent(this, AddParkingPlaceActivity.class);
             goToAddParkingPlaces.putExtra("Lat", String.valueOf(latLng.latitude));
             goToAddParkingPlaces.putExtra("Lng", String.valueOf(latLng.longitude));
@@ -471,10 +486,37 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback, Go
     }
 
     public void bookParking(View view) {
-//        BookParking toBeAddedBookPArking = new BookParking();
-//        toBeAddedBookPArking.setEnd_datetime();
-//        toBeAddedBookPArking.setStart_datetime();
-//        mApiService.bookParking(toBeAddedBookPArking).sub
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String startTime = df.format(c.getTime());
+        c.add(Calendar.HOUR, 1);
+        String endTime = df.format(c.getTime());
+
+        BookParking toBeAddedBookPArking = new BookParking();
+        toBeAddedBookPArking.setEnd_datetime(startTime.concat(" +0300"));
+        toBeAddedBookPArking.setStart_datetime(endTime.concat(" +0300"));
+
+
+        mApiService.bookParking(toBeAddedBookPArking, this.idOfCurrentSelectedParkingSpot)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Toast.makeText(HomeActivity.this, "OK", Toast.LENGTH_SHORT).show();
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+                });
 
     }
 }
