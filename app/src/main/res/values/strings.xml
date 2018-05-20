@@ -119,7 +119,7 @@
     <string name="nameofapp">ParkParkGo</string>
     <string name="title_activity_my_cars">My cars</string>
     <string name="title_activity_add_cars">Add cars</string>
-    <string name="title_activity_add_parking_place">AddParkingPlace</string>
+    <string name="title_activity_add_parking_place">Add new parking</string>
     <string name="title_activity_availability">Availability</string>
     <string name="title_activity_parking_history">Parking history</string>
 

@@ -1,12 +1,8 @@
 package com.gym.app.activities;
 
-import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -17,10 +13,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.gym.app.R;
-import com.gym.app.data.Prefs;
-import com.gym.app.data.model.Car;
 import com.gym.app.data.model.ParkPlace;
 import com.gym.app.data.model.ParkPlaceBody;
 import com.gym.app.di.InjectionHelper;
@@ -82,7 +75,7 @@ public class AddParkingPlaceActivity extends AppCompatActivity {
                 new SeekBar.OnSeekBarChangeListener() {
                     @Override
                     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                        priceText.setText( String.valueOf( seekBar.getProgress()) );
+                        priceText.setText("Price per hour: " + String.valueOf(seekBar.getProgress()));
                     }
 
                     @Override
@@ -99,11 +92,12 @@ public class AddParkingPlaceActivity extends AppCompatActivity {
     }
 
     private void populateSpinner() {
-        List<String> spinnerArray =  new ArrayList<String>();
+        List<String> spinnerArray = new ArrayList<String>();
         spinnerArray.add("small");
         spinnerArray.add("medium");
         spinnerArray.add("compact");
-        spinnerArray.add("large truck");
+        spinnerArray.add("large");
+        spinnerArray.add("truck");
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinnerArray);
 
@@ -125,7 +119,7 @@ public class AddParkingPlaceActivity extends AppCompatActivity {
 
         mApiService.getUser().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe( user -> {
+                .subscribe(user -> {
                     toBeAddedParkPlace.mUser = user;
 
                     // Get the Address
@@ -167,12 +161,13 @@ public class AddParkingPlaceActivity extends AppCompatActivity {
 
                                            @Override
                                            public void onComplete() {
-                                                setResult(2);
-                                                finish();
-                                            ;}
+                                               setResult(2);
+                                               finish();
+                                               ;
+                                           }
                                        }
 
-                                       );
+                            );
 
                 });
 
