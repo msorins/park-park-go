@@ -508,9 +508,9 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback, Go
 
                     @Override
                     public void onComplete() {
-                        Toast.makeText(HomeActivity.this, "OK", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(HomeActivity.this, "Booking succesfully made", Toast.LENGTH_SHORT).show();
+                        showCard(false);
                         loadParkingPlaces();
-
                     }
 
                     @Override
