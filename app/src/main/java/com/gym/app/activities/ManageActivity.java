@@ -107,6 +107,7 @@ public class ManageActivity extends BaseActivity implements OnMapReadyCallback, 
     SupportMapFragment mSupportMapFragment;
     private GoogleMap mMap;
     private static int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
+    private static int ADD_PARKING_PLACE_REQUEST_CODE = 2;
     Place mLastPlace;
 
     private RxLocation mRxLocation;
@@ -297,15 +298,17 @@ public class ManageActivity extends BaseActivity implements OnMapReadyCallback, 
     }
 
     private void gotParkPlaces(List<ParkPlace> parkPlaces) {
+        if(mParkPlacesMarkers == null)
+            mParkPlacesMarkers = new ArrayList<>();
+
         for (Marker marker : mParkPlacesMarkers) {
             marker.remove();
         }
         mParkPlacesMarkers.clear();
         mParkPlaces = parkPlaces;
         for (ParkPlace parkPlace : parkPlaces) {
-            boolean available = Math.random() > .5;
             MarkerOptions options = new MarkerOptions()
-                    .icon(BitmapDescriptorFactory.fromResource(available ? R.drawable.ic_park_spot_green : R.drawable.ic_park_spot_red))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_park_spot_green))
                     .position(new LatLng(parkPlace.mLatitude, parkPlace.mLongitude));
             Marker marker = mMap.addMarker(options);
             marker.setTag(parkPlace);
@@ -341,7 +344,12 @@ public class ManageActivity extends BaseActivity implements OnMapReadyCallback, 
                 // The user canceled the operation.
             }
         }
+
+        if (requestCode == ADD_PARKING_PLACE_REQUEST_CODE) {
+            loadOwnParkingPlaces();
+        }
     }
+
 
     private void foundNewPlace() {
         if (mLastPlace == null) {
@@ -586,6 +594,8 @@ public class ManageActivity extends BaseActivity implements OnMapReadyCallback, 
         Intent goToAddParkingPlace = new Intent(this, AddParkingPlaceActivity.class);
         goToAddParkingPlace.putExtra("Lat", current.latitude);
         goToAddParkingPlace.putExtra("Lng", current.longitude);
-        startActivity(goToAddParkingPlace);
+        startActivityForResult(goToAddParkingPlace, ADD_PARKING_PLACE_REQUEST_CODE);
     }
+
+
 }
