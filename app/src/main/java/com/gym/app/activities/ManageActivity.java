@@ -273,8 +273,27 @@ public class ManageActivity extends BaseActivity implements OnMapReadyCallback, 
     private void loadOwnParkingPlaces() {
         mApiService.getOwnParkingPlaces().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnError(Throwable::printStackTrace)
-                .subscribe(this::gotParkPlaces);
+                .subscribe(new Observer<List<ParkPlace>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<ParkPlace> parkPlaces) {
+                        gotParkPlaces(parkPlaces);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     private void gotParkPlaces(List<ParkPlace> parkPlaces) {
@@ -371,7 +390,7 @@ public class ManageActivity extends BaseActivity implements OnMapReadyCallback, 
             return true;
         }
         ParkPlace parkPlace = (ParkPlace) marker.getTag();
-        mSelectedParkPlace=parkPlace;
+        mSelectedParkPlace = parkPlace;
         mManageView.setVisibility(View.VISIBLE);
         Glide.with(this).load(parkPlace.mUser.mAvatar).into(mCardImage);
         mCardAdress.setText(parkPlace.mAddress);
@@ -394,24 +413,31 @@ public class ManageActivity extends BaseActivity implements OnMapReadyCallback, 
         int startingYear = this.timeFilterDialogFragment.mDatePicker1.getYear();
 
 
-
         int endingHour = this.timeFilterDialogFragment.mTimePicker2.getCurrentHour();
         int endingDay = this.timeFilterDialogFragment.mDatePicker2.getDayOfMonth();
         int endingMonth = this.timeFilterDialogFragment.mDatePicker2.getMonth();
-        int endingYear =this.timeFilterDialogFragment. mDatePicker2.getYear();
+        int endingYear = this.timeFilterDialogFragment.mDatePicker2.getYear();
 
         // Goal: 2018-05-19 11:11:06 +0300
         StringBuilder start = new StringBuilder();
-        start.append(startingYear); start.append("-");
-        start.append(startingMonth); start.append("-");
-        start.append(startingDay); start.append(" ");
-        start.append(startingHour); start.append(":00:00 +0300");
+        start.append(startingYear);
+        start.append("-");
+        start.append(startingMonth);
+        start.append("-");
+        start.append(startingDay);
+        start.append(" ");
+        start.append(startingHour);
+        start.append(":00:00 +0300");
 
         StringBuilder end = new StringBuilder();
-        end.append(endingYear); end.append("-");
-        end.append(endingMonth); end.append("-");
-        end.append(endingDay); end.append(" ");
-        end.append(endingHour); end.append(":00:00 +0300");
+        end.append(endingYear);
+        end.append("-");
+        end.append(endingMonth);
+        end.append("-");
+        end.append(endingDay);
+        end.append(" ");
+        end.append(endingHour);
+        end.append(":00:00 +0300");
 
         mApiService.getParkingPlacesByCriterias(
                 Prefs.Latitude.get(),
@@ -423,7 +449,27 @@ public class ManageActivity extends BaseActivity implements OnMapReadyCallback, 
         ).subscribeOn(Schedulers.io())
                 .doOnError(Throwable::printStackTrace)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::gotParkPlaces);
+                .subscribe(new Observer<List<ParkPlace>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<ParkPlace> parkPlaces) {
+                        gotParkPlaces(parkPlaces);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
 
     }
 
@@ -431,7 +477,29 @@ public class ManageActivity extends BaseActivity implements OnMapReadyCallback, 
         mApiService.getOwnParkingPlaces().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnError(Throwable::printStackTrace)
-                .subscribe(this::gotParkPlaces);
+                .subscribe(
+                        new Observer<List<ParkPlace>>() {
+                            @Override
+                            public void onSubscribe(Disposable d) {
+
+                            }
+
+                            @Override
+                            public void onNext(List<ParkPlace> parkPlaces) {
+                                gotParkPlaces(parkPlaces);
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                e.printStackTrace();
+                            }
+
+                            @Override
+                            public void onComplete() {
+
+                            }
+                        }
+                );
 
         mDrawerLayout.closeDrawers();
 //        cancelOwnParkingSpotsButton.setVisibility(View.VISIBLE);
@@ -440,8 +508,8 @@ public class ManageActivity extends BaseActivity implements OnMapReadyCallback, 
     }
 
     @OnClick(R.id.card_manage)
-    void cardManage(){
-        if (mSelectedParkPlace==null){
+    void cardManage() {
+        if (mSelectedParkPlace == null) {
             Toast.makeText(this, "Please select a parking spot!", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -453,7 +521,7 @@ public class ManageActivity extends BaseActivity implements OnMapReadyCallback, 
     public void onMapLongClick(LatLng latLng) {
         // Delete last added marker if exists
         deleteLastAddedMarker();
-        mParkPlacesMarkers=null;
+        mParkPlacesMarkers = null;
         mManageView.setVisibility(View.INVISIBLE);
         // Add the marker
         MarkerOptions lastAddedMarkerOptions = new MarkerOptions()
@@ -462,7 +530,7 @@ public class ManageActivity extends BaseActivity implements OnMapReadyCallback, 
         this.lastAddedMarker = mMap.addMarker(lastAddedMarkerOptions);
 
         // Populate the card with information & show it
-        mCardTitle.setText( "Add a new parking place" );
+        mCardTitle.setText("Add a new parking place");
         Geocoder geocoder;
         List<Address> addresses = new ArrayList<>();
         geocoder = new Geocoder(this, Locale.getDefault());
@@ -472,9 +540,9 @@ public class ManageActivity extends BaseActivity implements OnMapReadyCallback, 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if(addresses.size() != 0) {
+        if (addresses.size() != 0) {
             String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-            mCardAdress.setText( address );
+            mCardAdress.setText(address);
         }
         showCard(true);
 
@@ -502,7 +570,7 @@ public class ManageActivity extends BaseActivity implements OnMapReadyCallback, 
     }
 
     public void deleteLastAddedMarker() {
-        if(this.lastAddedMarker != null) {
+        if (this.lastAddedMarker != null) {
             this.lastAddedMarker.remove();
             this.lastAddedMarker = null;
         }
