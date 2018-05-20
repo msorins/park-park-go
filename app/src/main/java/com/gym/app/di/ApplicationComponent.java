@@ -8,6 +8,7 @@ import com.gym.app.activities.AvailabilityActivity;
 import com.gym.app.activities.HomeActivity;
 import com.gym.app.activities.MyCarsActivity;
 import com.gym.app.activities.ManageActivity;
+import com.gym.app.activities.ParkingHistoryActivity;
 import com.gym.app.data.observables.SaveCoursesObservable;
 import com.gym.app.data.observables.SaveProductsObservable;
 import com.gym.app.data.observables.UpdateCourseObservable;
@@ -83,4 +84,6 @@ public interface ApplicationComponent {
     void inject(AddAvailabilityActivity addAvailabilityActivity);
 
     void inject(AddParkingPlaceActivity addParkingPlaceActivity);
+
+    void inject(ParkingHistoryActivity parkingHistoryActivity);
 }

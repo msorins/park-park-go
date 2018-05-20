@@ -10,8 +10,11 @@ import com.gym.app.data.model.CarBody;
 import com.gym.app.data.model.ParkPlaceBody;
 import com.gym.app.data.model.JWT;
 import com.gym.app.data.model.ParkPlace;
+import com.gym.app.data.model.ParkingHistory;
+import com.gym.app.data.model.ParkingHistoryBody;
 import com.gym.app.data.model.Product;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -72,6 +75,9 @@ public interface ApiService {
     @POST("park_spots/{id}/book")
     Completable bookParking(@Body BookParking bookParking, @Path("id") int parkSpotId);
 
+    @GET("/bookings")
+    Observable<ArrayList<ParkingHistory>> getParkingHistories();
+
 
     @FormUrlEncoded
     @POST("login")
@@ -91,6 +97,9 @@ public interface ApiService {
 
     @POST("api/newsletter/subscription")
     Completable subscribeToNewsLetter();
+
+    @POST("user/bookings")
+    Observable<ParkingHistory> addParkingHistory(@Body ParkingHistoryBody parkingHistoryBody);
 
     @DELETE("api/newsletter/subscription")
     Completable unSubscribeToNewsLetter();
