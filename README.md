@@ -9,6 +9,8 @@
 # Idea
 Share your parking spot, earn credits or use your own credits to park in other people personal parking spot.
 
+It was build as a solution to solve one of the biggest problems that cities encounter: 'not having enough parking spots'. Due to the fact that a lot of people live in close proximity to the city center and are away the most part of their day (for example, with a 9 to 5 job), during that time, the owner of the parking place could easily rent his/her spot, the situation being a win win.
+
 # Technologies used
 
 ### Mobile:
